@@ -11,18 +11,20 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Display extends JFrame implements MouseListener, MouseMotionListener
 {
-	private JPanel screen, draw, topics, score;
+	private JPanel screen, draw, topics, score, prompt;
 	private Image top;
 	private ArrayList<Square> questions;
 	private Square selected;
 	public Display ()
 	{
 		screen = new JPanel(new BorderLayout());
+		prompt = new JPanel();
 		draw = new DrawArea (780, 500);
 		draw.addMouseListener(this);
 		draw.addMouseMotionListener(this);
@@ -121,8 +123,13 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 	@Override
 	public void mouseClicked(MouseEvent e) 
 	{
-		// TODO Auto-generated method stub
-		
+		int x = e.getX();
+		int y = e.getY();
+		if (inBounds (x, y))
+		{
+			@SuppressWarnings("unused")
+			String s = JOptionPane.showInputDialog(null, prompt, "Enter the name of the song:");
+		}
 	}
 
 	@Override
@@ -150,8 +157,8 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseDragged(MouseEvent e) 
+	{
 		
 	}
 
