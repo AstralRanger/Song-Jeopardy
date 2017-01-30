@@ -11,7 +11,7 @@ public class Square
 	public final int DISP_HEIGHT = 100;
 	public final int GRID_LENGTH = 100;
 	public final int GRID_HEIGHT = 64;
-	private int value, row, col;
+	private int value, row, col, year;
 	private boolean enabled, moused;
 	private Image scores = loadImage("scores");
 	
@@ -20,6 +20,7 @@ public class Square
 		this.row = row;
 		this.col = col;
 		value = row*100;
+		year = col + 2009;
 		enabled = true;
 		moused = false;
 	}
@@ -55,6 +56,11 @@ public class Square
 	public boolean getEnabled ()
 	{
 		return enabled;
+	}
+	
+	public int getYear ()
+	{
+		return year;
 	}
 	
 	public void disable ()
