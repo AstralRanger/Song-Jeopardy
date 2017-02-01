@@ -14,13 +14,15 @@ public class Square
 	private int value, row, col, year;
 	private boolean enabled, moused;
 	private Image scores = loadImage("scores");
+	private Song song;
 	
-	public Square (int row, int col)
+	public Square (int row, int col, Song song)
 	{
 		this.row = row;
 		this.col = col;
 		value = row*100;
 		year = col + 2009;
+		this.song = song;
 		enabled = true;
 		moused = false;
 	}
@@ -61,6 +63,11 @@ public class Square
 	public int getYear ()
 	{
 		return year;
+	}
+	
+	public Song getSong()
+	{
+		return song;
 	}
 	
 	public void disable ()

@@ -21,6 +21,7 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 	private Image top;
 	private ArrayList<Square> questions;
 	private Square selected;
+	private SongList songlist;
 	public Display ()
 	{
 		screen = new JPanel(new BorderLayout());
@@ -30,7 +31,7 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		draw.addMouseMotionListener(this);
 		topics = new TopBar (780, 100);
 		score = new JPanel (); 
-		selected = new Square (-1, -1);
+		selected = new Square (-1, -1, null);
 	
 		screen.add(draw, "Center");
 		screen.add(topics, "North");
@@ -38,12 +39,13 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		top = loadImage ("categories");
 		
 		// Add questions
+		songlist = new SongList();
 		questions = new ArrayList<Square>();
 		for (int c = 1; c <= 5; c++)
 		{
 			for (int d = 1; d <= 5; d++)
 			{
-				questions.add(new Square (c, d));
+				questions.add(new Square (c, d, songlist.getSong(2009 + d, c)));
 			}
 		}
 		 
@@ -127,8 +129,10 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		int y = e.getY();
 		if (inBounds (x, y))
 		{
+			Square active = findSquare (x, y);
 			@SuppressWarnings("unused")
 			String s = JOptionPane.showInputDialog(null, prompt, "Enter the name of the song:");
+		    JOptionPane.showMessageDialog(null, "The Correct Song Name Is: " + active.getSong().getName());
 		}
 	}
 
