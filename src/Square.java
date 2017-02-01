@@ -14,6 +14,7 @@ public class Square
 	private int value, row, col, year;
 	private boolean enabled, moused;
 	private Image scores = loadImage("scores");
+	private Image disabled = loadImage("disabled");
 	private Song song;
 	
 	public Square (int row, int col, Song song)
@@ -93,8 +94,11 @@ public class Square
 	
 	public void show (Graphics g)
 	{
-		g.drawImage(scores, (col-1)*DISP_LENGTH, (row-1)*DISP_HEIGHT, col*DISP_LENGTH, row*DISP_HEIGHT,
+		if (enabled)
+			g.drawImage(scores, (col-1)*DISP_LENGTH, (row-1)*DISP_HEIGHT, col*DISP_LENGTH, row*DISP_HEIGHT,
 				0, (row-1)*GRID_HEIGHT, GRID_LENGTH, row*GRID_HEIGHT, null);
+		else
+			g.drawImage(disabled, (col-1)*DISP_LENGTH, (row-1)*DISP_HEIGHT, DISP_LENGTH, DISP_HEIGHT, null);
 		if (moused)
 			g.drawRect((col-1)*DISP_LENGTH, (row-1)*DISP_HEIGHT, DISP_LENGTH-1, DISP_HEIGHT-1);
 	}

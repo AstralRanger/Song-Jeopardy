@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -10,18 +12,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Display extends JFrame implements MouseListener, MouseMotionListener
+public class Display extends JFrame implements MouseListener, MouseMotionListener, ActionListener
 {
 	private JPanel screen, draw, topics, score, prompt;
+	private JLabel scoreboard;
 	private Image top;
 	private ArrayList<Square> questions;
 	private Square selected;
 	private SongList songlist;
+	private JButton play;
+	static int currentx, currenty, my_score;
 	public Display ()
 	{
 		screen = new JPanel(new BorderLayout());
@@ -33,11 +42,10 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		score = new JPanel (); 
 		selected = new Square (-1, -1, null);
 	
-		screen.add(draw, "Center");
-		screen.add(topics, "North");
-		screen.add(score, "South");
+		
 		top = loadImage ("categories");
 		
+		scoreboard = new JLabel("Score: " + score);
 		// Add questions
 		songlist = new SongList();
 		questions = new ArrayList<Square>();
@@ -48,6 +56,18 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 				questions.add(new Square (c, d, songlist.getSong(2009 + d, c)));
 			}
 		}
+		currentx = 0;
+		currenty = 0;
+		my_score = 0;
+		scoreboard = new JLabel("Score: 0");
+		score.add(scoreboard);
+		
+		screen.add(draw, "Center");
+		screen.add(topics, "North");
+		screen.add(score, "South");
+		play = new JButton("Play");
+		play.addActionListener(this);
+		prompt.add(play);
 		 
 		setContentPane(screen);
 		setTitle ("Song Jeopardy");
@@ -55,6 +75,8 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		setResizable (false);
 		setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo (null);  
+		
+		
 		
 		repaint();
 	}
@@ -130,10 +152,45 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		if (inBounds (x, y))
 		{
 			Square active = findSquare (x, y);
-			@SuppressWarnings("unused")
-			String s = JOptionPane.showInputDialog(null, prompt, "Enter the name of the song:");
-		    JOptionPane.showMessageDialog(null, "The Correct Song Name Is: " + active.getSong().getName());
+			if (active.getEnabled())
+			{
+				currentx = x;
+				currenty = y;
+				String s = JOptionPane.showInputDialog(null, prompt, "Enter the name of the song:");
+				if (s != null)
+				{
+					boolean correct = checkCorrect(active.getSong().getUrl(), s);
+					if (correct)
+					{
+						JOptionPane.showMessageDialog(null, "You are correct!");
+						my_score += active.getSong().getDifficulty()*100;
+						scoreboard.setText("Score: " + my_score);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "The Correct Song Name Is: " + active.getSong().getName());
+					}
+				}
+			    play.setEnabled(true);
+			    findSquare(x,y).disable(); 
+			    
+			    if (gameEnded())
+			    	JOptionPane.showMessageDialog(null, "Game has ended. Your score is " + my_score + ". Please close the window now.");
+			    	
+			 }
 		}
+	}
+	
+	public boolean checkCorrect (String actual, String tried)
+	{
+		String temp = "";
+		for (int c = 0; c < tried.length(); c++)
+		{
+			if (((tried.charAt(c) >= 'A' && tried.charAt(c) <= 'Z') || (tried.charAt(c) >= 'a' && tried.charAt(c) <= 'z'))
+					|| (tried.charAt(c) >= '0' && tried.charAt(c) <= '9'))
+				temp += Character.toString(tried.charAt(c));
+		}
+		return temp.equalsIgnoreCase(actual);
 	}
 
 	@Override
@@ -171,17 +228,57 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 	{
 		int x = e.getX();
 		int y = e.getY();
-		if (!(findSquare(x,y).equals(selected)))
+		try
 		{
-			if (selected.getRow() != -1)
-				questions.get((selected.getRow()-1)*5 + (selected.getCol()-1)).unmouseOver();;
-			
-			if (inBounds(x,y))
+			if (!inBounds(x, y) || !(findSquare(x,y).equals(selected)))
 			{
-				selected = findSquare(x,y);
-				findSquare(x, y).mouseOver();
+				if (selected.getRow() != -1)
+					questions.get((selected.getRow()-1)*5 + (selected.getCol()-1)).unmouseOver();;
+				
+				if (inBounds(x,y))
+				{
+					selected = findSquare(x,y);
+					findSquare(x, y).mouseOver();
+				}
 			}
+		}
+		catch (Exception except)
+		{
 		}
 		repaint();
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		play.setEnabled(false);
+		Square active = findSquare (currentx, currenty);
+		{
+			String url = active.getSong().getUrl();
+			try
+		    {
+		        Clip clip = AudioSystem.getClip();
+		        clip.open(AudioSystem.getAudioInputStream(new File("res//" + url + ".wav")));
+		        clip.start();
+		    }
+		    catch (Exception exc)
+		    {
+		        exc.printStackTrace(System.out);
+		    }
+		}
+	}
+	
+	public boolean gameEnded()
+	{
+		boolean done = true;
+		for (int c = 0; c < questions.size(); c++)
+		{
+			if (questions.get(c).getEnabled())
+				done = false;
+		}
+		return done;
+	}
+	
 }
+
+	

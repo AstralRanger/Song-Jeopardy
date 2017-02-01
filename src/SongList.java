@@ -146,7 +146,7 @@ public class SongList extends ArrayList<Song>
 		
 		this.add(new Song ("Ne-Yo - Let Me Love You", "letmeloveyou", 2013, 2));
 		this.add(new Song ("Justin Bieber - Beauty And A Beat", "beautyandabeat", 2013, 2));
-		this.add(new Song ("Imagine Dragon - It's Time", "itstime", 2013, 2));
+		this.add(new Song ("Imagine Dragons - It's Time", "itstime", 2013, 2));
 		this.add(new Song ("Rihanna - Stay", "stay", 2013, 2));
 		this.add(new Song ("Swedish House Mafia - Don't You Worry Child", "dontyouworrychild", 2013, 2));
 		this.add(new Song ("Demi Lovato - Heart Attack", "heartattack", 2013, 2));
@@ -179,7 +179,7 @@ public class SongList extends ArrayList<Song>
 		this.add(new Song ("Fall Out Boy - My Songs Know What You Did In The Dark", "mysongsknowwhatyoudidinthedark", 2013, 5));
 		this.add(new Song ("Kelly Clarkson - People Like Us", "peoplelikeus", 2013, 5));
 		this.add(new Song ("Phillip Phillips - Gone Gone Gone", "gonegonegone", 2013, 5));
-		this.add(new Song ("Awolnation - Sail", "2013", 2013, 5));
+		this.add(new Song ("Awolnation - Sail", "sail", 2013, 5));
 		
 		
 		this.add(new Song ("OneRepublic - Counting Stars", "countingstars", 2014, 1));
@@ -194,7 +194,6 @@ public class SongList extends ArrayList<Song>
 		this.add(new Song ("Passenger - Let Her Go", "lethergo", 2014, 2));
 		this.add(new Song ("Lorde - Team", "team", 2014, 2));
 		this.add(new Song ("Bastille - Pompeii", "pompeii", 2014, 2));
-		this.add(new Song ("A Great Big World - Say Something", "saysomething", 2014, 2));
 		this.add(new Song ("Pharell - Happy", "happy", 2014, 2));
 		this.add(new Song ("MAGIC! - Rude", "rude", 2014, 2));
 		this.add(new Song ("Maroon 5 - Maps", "maps", 2014, 2));
@@ -220,8 +219,8 @@ public class SongList extends ArrayList<Song>
 	
 	public Song getSong (int year, int difficulty)
 	{
-		Song temp = get(0);
-		int rand = 0;
+		int rand = (int)(Math.random()*size());
+		Song temp = get((int)(rand));
 		while (temp.getYear() != year || temp.getDifficulty() != difficulty)
 		{
 			rand = (int) (Math.random()*size());
