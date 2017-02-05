@@ -128,7 +128,6 @@ public class SongList extends ArrayList<Song>
 		this.add(new Song ("The Fray - Heartbeat", "heartbeat", 2012, 5));
 		this.add(new Song ("Jojo - Disaster", "disaster", 2012, 5));	
 		this.add(new Song ("We The Kings - Say You Like Me", "sayyoulikeme", 2012, 5));
-		this.add(new Song ("K'naan - Is Anybody Out There?", "isanybodyoutthere", 2012, 5));
 		this.add(new Song ("The Wanted - Chasing The Sun", "chasingthesun", 2012, 5));
 		this.add(new Song ("Grouplove - Tongue Tied", "tonguetied", 2012, 5));
 		this.add(new Song ("Linkin Park - Burn It Down", "burnitdown", 2012, 5));
