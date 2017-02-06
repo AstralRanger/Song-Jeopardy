@@ -76,7 +76,7 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo (null);  
 		
-		
+		playSongs();
 		
 		repaint();
 	}
@@ -248,6 +248,23 @@ public class Display extends JFrame implements MouseListener, MouseMotionListene
 		repaint();
 	}
 	
+	public void playSongs()
+	{
+		for (int c = 0; c < songlist.size(); c++)
+		{
+			String url = songlist.get(c).getUrl();
+			try
+		    {
+		        Clip clip = AudioSystem.getClip();
+		        clip.open(AudioSystem.getAudioInputStream(new File("res//" + url + ".wav")));
+		        clip.start();
+		    }
+		    catch (Exception exc)
+		    {
+		        exc.printStackTrace(System.out);
+		    }
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
